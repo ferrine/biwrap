@@ -5,7 +5,7 @@ Yet simple util to make wrapper with optional arguments
 ## Overview
 Some wrappers may have optional arguments and we often want to avoid `@wrapper()` calls and use `@wrapper` instead
 
-This works for simple function
+This works for simple wrapper
 ```python
 import biwrap
 
@@ -20,7 +20,7 @@ def hiwrap(fn, hi=True):
     return new
 ```
 
-Defined wrapper can be called in both ways
+Defined wrapper can be used in both ways
 
 ```python
 @hiwrap
@@ -56,6 +56,7 @@ Class methods / properties are supported too
 class O:
     def __init__(self, n):
         self.n = n
+
     @classmethod
     @hiwrap
     def fn(cls, n):
@@ -67,11 +68,23 @@ class O:
         return self.n
         
         
-o = O()
+o = O(2)
 o.fn(1)
 #> hi
 #> 1
 print(o.num)
+#> bye
+#> 2
+```
+
+Function like call is OK too
+
+```python
+def fn(n):
+    print(n)
+
+fn = hiwrap(fn, hi=False)
+fn(1)
 #> bye
 #> 1
 ```
