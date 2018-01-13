@@ -1,12 +1,17 @@
 #!/usr/bin/env python
+from os.path import realpath, dirname, join
 from setuptools import setup, find_packages
 
 DISTNAME = 'biwrap'
 AUTHOR = 'Maxim Kochurov'
 AUTHOR_EMAIL = 'maxim.v.kochurov@gmail.com'
-VERSION = '0.1.2'
-LONG_DESCRIPTION = open('README.rst').read()
-LICENSE = open('LICENSE').read()
+VERSION = '0.1.5'
+PROJECT_ROOT = dirname(realpath(__file__))
+try:
+    LONG_DESCRIPTION = open(join(PROJECT_ROOT, 'README.rst')).read()
+except IOError:
+    LONG_DESCRIPTION = ''
+LICENSE = 'MIT License'
 
 if __name__ == "__main__":
     setup(
@@ -19,5 +24,5 @@ if __name__ == "__main__":
         license=LICENSE,
         packages=find_packages(),
         url='https://github.com/ferrine/biwrap',
-        download_url='https://github.com/ferrine/biwrap/archive/v0.1.2.zip'
+        download_url='https://github.com/ferrine/biwrap/archive/v0.1.5.zip'
     )
