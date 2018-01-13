@@ -9,6 +9,8 @@ VERSION = '0.1.0'
 
 if __name__ == "__main__":
     setup(
+        author=AUTHOR,
+        author_email=AUTHOR_EMAIL,
         name=DISTNAME,
         version=VERSION,
         packages=find_packages(),
