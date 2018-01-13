@@ -4,22 +4,26 @@ Installation
 Master branch
 
 .. code-block:: bash
+
     pip install git+https://github.com/ferrine/biwrap
 
 Latest release
 
 .. code-block:: bash
+
     pip install biwrap
 
 
 Overview
 --------
-Some wrappers may have optional arguments and we often want to avoid :python:`@wrapper()` calls and use :python:`@wrapper` instead. Typical example is ` :python:`@pytest.fixture` <https://docs.pytest.org/en/latest/fixture.html>`__
+Some wrappers may have optional arguments and we often want to avoid ``@wrapper()`` calls and use ``@wrapper`` instead. Typical example is `@pytest.fixture <https://docs.pytest.org/en/latest/fixture.html>`__
 
 Problem discussion is `here (SO) <https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments>`__.
 
 This works for simple wrapper
+
 .. code-block:: python
+
     import biwrap
 
     @biwrap.biwrap
@@ -36,6 +40,7 @@ This works for simple wrapper
 Defined wrapper can be used in both ways
 
 .. code-block:: python
+
     @hiwrap
     def fn(n):
         print(n)
@@ -54,6 +59,7 @@ Defined wrapper can be used in both ways
 ``biwrap`` also works for bound methods
 
 .. code-block:: python
+
     class O:
         @hiwrap(hi=False)
         def fn(self, n):
@@ -64,7 +70,9 @@ Defined wrapper can be used in both ways
     #> 1
 
 Class methods / properties are supported too
+
 .. code-block:: python
+
     class O:
         def __init__(self, n):
             self.n = n
@@ -92,6 +100,7 @@ Class methods / properties are supported too
 Function like call is OK too
 
 .. code-block:: python
+
     def fn(n):
         print(n)
 
