@@ -12,7 +12,7 @@ pip install biwrap
 ```
 
 ## Overview
-Some wrappers may have optional arguments and we often want to avoid `@wrapper()` calls and use `@wrapper` instead. Tipical example is [`@pytest.fixture`](https://docs.pytest.org/en/latest/fixture.html). 
+Some wrappers may have optional arguments and we often want to avoid `@wrapper()` calls and use `@wrapper` instead. Typical example is [`@pytest.fixture`](https://docs.pytest.org/en/latest/fixture.html). 
 
 Problem discussion is [here (SO)](https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments).
 
