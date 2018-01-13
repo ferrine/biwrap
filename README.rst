@@ -1,10 +1,10 @@
+******
 biwrap
-======
+******
 Yet simple util to make wrapper with optional arguments
 
-
 Installation
-------------
+############
 
 Master branch
 
@@ -18,14 +18,119 @@ Latest release
 
     pip install biwrap
 
+Use case
+########
+Readability and transparent implementation is important. Wrappers is an advanced topic in programming and making them readable in some cases is difficult. The particular case is parametrizable wrapper. It can either be called with or without arguments. Implementation to handle this case is often tricky and looks weird (see `SO thread <https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments>`__). This package solves the problem and provides with simple and generic solution.
 
-Overview
---------
-Some wrappers may have optional arguments and we often want to avoid ``@wrapper()`` calls and use ``@wrapper`` instead. Typical example is `@pytest.fixture <https://docs.pytest.org/en/latest/fixture.html>`__
+Example
+#######
 
-Problem discussion is `here (SO) <https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments>`__.
+Let's discuss a case when it is needed to put functions into registry. Some functions can have alias names.
 
-This works for simple wrapper
+Naive Solution
+**************
+
+.. code-block:: python
+
+    def register(alias=None):
+        def inner(fn):
+            if fn.__name__ not in register.storage:
+                register.storage[fn.__name__] = fn
+            elif register.storage[fn.__name__] is not fn:
+                raise KeyError('{} is already in storage'.format(fn.__name__))
+            if alias is not None and alias not in register.storage:
+                register.storage[alias] = fn
+            elif alias is not None:
+                raise KeyError('{} is already in storage'.format(alias))
+            return fn
+        return inner
+    register.storage = {}
+
+
+    @register()
+    def f1(a):
+        return a
+
+    print(register.storage)
+    #> {'f1': <function f1 at 0x11ff519d8>}
+
+
+    @register(alias='fn3')
+    def f2(a):
+        return a
+
+    print(register.storage)
+    #> {'f1': <function f1 at 0x11ff519d8>, 'f2': <function f2 at 0x10a87d0d0>, 'fn3': <function f2 at 0x10a87d0d0>}
+
+
+Analysis
+========
+
+The above example shows redundancy in
+
+-   decorator definition has double nesting (double ``def``)
+-   usage requires trailing parenthesis ``@register()`` even in case we do not use optional argument
+
+More readable code should avoid these two points and look like
+
+.. code-block:: python
+
+    def register(fn, alias=None):
+        ...
+
+    @register
+    def f1(a):
+        return a
+
+    @register(alias='fn3') # <- (1)
+    def f2(a):
+        return a
+
+Naive implementation of the above API wion't work. Line marked above as `(1)` will fail as first argument `fn` is not passed. But we want the output to be the same.
+
+Better solution
+***************
+
+.. code-block:: python
+
+    import biwrap
+
+    @biwrap.biwrap
+    def register(fn, alias=None):
+        if fn.__name__ not in register.storage:
+            register.storage[fn.__name__] = fn
+        else:
+            raise KeyError('{} is already in storage'.format(fn.__name__))
+        if alias is not None and alias not in register.storage:
+            register.storage[alias] = fn
+        elif alias is not None:
+            raise KeyError('{} is already in storage'.format(alias))
+        return fn
+    register.storage = {}
+
+    @register
+    def f1(a):
+        return a
+
+    print(register.storage)
+    #> {'f1': <function f1 at 0x10f45a048>}
+
+    @register(alias='fn3')
+    def f2(a):
+        return a
+
+    print(register.storage)
+    #> {'f1': <function f1 at 0x10f45a048>, 'f2': <function f2 at 0x10f45a488>, 'fn3': <function f2 at 0x10f45a488>}
+
+
+Functionality Overview
+######################
+Some corner cases may exist and custom coding can create a boilerplate for each usecase (see this `SO thread <https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments>`__). This package takes the best and implements yet simple but generic solution to resolve them all(?).
+
+Setup
+*****
+
+Let's take a simple wrapper as an example. It will print ``hi`` or ``bye`` depending on parametrization, default is ``hi``.
 
 .. code-block:: python
 
@@ -41,7 +146,11 @@ This works for simple wrapper
             return fn(*args, **kwargs)
         return new
 
+Cases
+*****
 
+Function wrapping
+=================
 Defined wrapper can be used in both ways
 
 .. code-block:: python
@@ -61,7 +170,10 @@ Defined wrapper can be used in both ways
     #> 1
 
 
-``biwrap`` also works for bound methods
+Bound method wrapping
+=====================
+
+``biwrap`` also works for bound methods. As seen in `SO thread <https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments>`__ this can be a problem as first positional argument is ``self`` instead of a function.
 
 .. code-block:: python
 
@@ -74,7 +186,10 @@ Defined wrapper can be used in both ways
     #> bye
     #> 1
 
-Class methods / properties are supported too
+Class methods / properties wrapping
+===================================
+
+Implementation deals with these cases as well
 
 .. code-block:: python
 
@@ -101,6 +216,9 @@ Class methods / properties are supported too
     #> bye
     #> 2
 
+
+Wrapper as a function
+=====================
 
 Function like call is OK too
 
