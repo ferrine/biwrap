@@ -18,9 +18,31 @@ Latest release
 
     pip install biwrap
 
-Use case
-########
-Readability and transparent implementation is important. Wrappers is an advanced topic in programming and making them readable in some cases is difficult. The particular case is parametrizable wrapper. It can either be called with or without arguments. Implementation to handle this case is often tricky and looks weird (see `SO thread <https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments>`__). This package solves the problem and provides with simple and generic solution.
+Problem outlined
+################
+**Readability and transparent implementation is important.** Wrappers is an advanced topic in programming and making them readable in some cases is difficult. The particular case is parametrizable wrapper. It can either be called with or without arguments. Implementation to handle this case is often tricky and looks weird (see `SO thread <https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments>`__). This package solves the problem and provides with simple and generic solution.
+
+API
+###
+A minimal snippet to apply it to your problem.
+
+.. code-block:: python
+
+    import biwrap
+
+    @biwrap.biwrap
+    def wrapper(fn, arg1='default', arg2='default'):
+        def wrapped(*fn_args, **fn_kwargs):
+            ...  # depends on `arg1`, `arg2`
+        return wrapped
+
+    @wrapper  # use defaults
+    def func1(a, b):
+        ...
+
+    @wrapper(arg1='non default')  # change defaults
+    def func2(a, b):
+        ...
 
 Example
 #######
@@ -86,7 +108,7 @@ More readable code should avoid these two points and look like
     def f2(a):
         return a
 
-Naive implementation of the above API wion't work. Line marked above as `(1)` will fail as first argument `fn` is not passed. But we want the output to be the same.
+Naive implementation of the above API wion't work. Line marked above as ``(1)`` will fail as first argument ``fn`` is not passed. But we want the output to be the same.
 
 Better solution
 ***************
