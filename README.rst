@@ -47,7 +47,7 @@ A minimal snippet to apply it to your problem.
 Example
 #######
 
-Let's discuss a case when it is needed to put functions into registry. Some functions can have alias names.
+Let's discuss a case when it is needed to put functions into a registry. Some functions can have alias names.
 
 Naive Solution
 **************
@@ -93,7 +93,7 @@ The above example shows redundancy in
 -   decorator definition has double nesting (double ``def``)
 -   usage requires trailing parenthesis ``@register()`` even in case we do not use optional argument
 
-More readable code should avoid these two points and look like
+More readable code should avoid these two points and look like:
 
 .. code-block:: python
 
@@ -104,11 +104,11 @@ More readable code should avoid these two points and look like
     def f1(a):
         return a
 
-    @register(alias='fn3') # <- (1)
+    @register(alias='fn3')  # <- (1)
     def f2(a):
         return a
 
-Naive implementation of the above API wion't work. Line marked above as ``(1)`` will fail as first argument ``fn`` is not passed. But we want the output to be the same.
+Naive implementation of the above API won't work. Line marked above as ``(1)`` will fail as first argument ``fn`` is not passed. But we want the output to be the same.
 
 Better solution
 ***************
