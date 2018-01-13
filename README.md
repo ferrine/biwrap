@@ -1,6 +1,15 @@
 # biwrap
 Yet simple util to make wrapper with optional arguments
 
+## Installation
+Master branch
+```
+pip install git+https://github.com/ferrine/biwrap
+```
+Latest release
+```
+pip install biwrap
+```
 
 ## Overview
 Some wrappers may have optional arguments and we often want to avoid `@wrapper()` calls and use `@wrapper` instead
