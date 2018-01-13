@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 DISTNAME = 'biwrap'
 AUTHOR = 'Maxim Kochurov'
 AUTHOR_EMAIL = 'maxim.v.kochurov@gmail.com'
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 LONG_DESCRIPTION = open('README.rst').read()
 LICENSE = open('LICENSE').read()
 
@@ -19,5 +19,5 @@ if __name__ == "__main__":
         license=LICENSE,
         packages=find_packages(),
         url='https://github.com/ferrine/biwrap',
-        download_url='https://github.com/ferrine/biwrap/archive/v0.1.1.zip'
+        download_url='https://github.com/ferrine/biwrap/archive/v0.1.2.zip'
     )
