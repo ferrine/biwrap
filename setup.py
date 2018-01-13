@@ -4,12 +4,14 @@ from setuptools import setup, find_packages
 DISTNAME = 'biwrap'
 AUTHOR = 'Maxim Kochurov'
 AUTHOR_EMAIL = 'maxim.v.kochurov@gmail.com'
-VERSION = '0.0.0'
+VERSION = '0.1.0'
 
 
 if __name__ == "__main__":
     setup(
         name=DISTNAME,
         version=VERSION,
-        packages=find_packages()
+        packages=find_packages(),
+        url='https://github.com/ferrine/biwrap',
+        download_url='https://github.com/ferrine/biwrap/archive/v0.1.0.zip'
     )
