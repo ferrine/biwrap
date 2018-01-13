@@ -102,3 +102,36 @@ def test_wrapped8(capsys):
     print(num)
     captured = capsys.readouterr()
     assert captured.out == "hi\n1\n"
+
+
+def test_wrapped9(capsys):
+    class W:
+        def __init__(self, n):
+            self.n = n
+
+        @biwrap.biwrap
+        def wrap(self, fn, text='hi'):
+            def wrapped(*args, **kwargs):
+                for _ in range(self.n):
+                    print(text)
+                return fn(*args, **kwargs)
+            return wrapped
+
+    wr = W(3)
+
+    @wr.wrap
+    def fn(n):
+        print(n)
+
+    fn(1)
+
+    @wr.wrap(text='bye')
+    def fn(n):
+        print(n)
+
+    wr.n = 2
+    fn(2)
+    captured = capsys.readouterr()
+    assert captured.out == "hi\nhi\nhi\n1\nbye\nbye\n2\n"
+
+

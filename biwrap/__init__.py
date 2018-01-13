@@ -1,5 +1,4 @@
 import functools
-import inspect
 
 __all__ = [
     'biwrap'
@@ -7,22 +6,17 @@ __all__ = [
 
 
 def biwrap(wrapper):
-    if inspect.ismethod(wrapper):
-        @functools.wraps(wrapper)
-        def enhanced(self, *args, **kwargs):
-            if len(args) > 0:
-                newfn = wrapper(self, *args, **kwargs)
-                return newfn
-            else:
-                newwrapper = functools.partial(wrapper, self, **kwargs)
-                return newwrapper
-    else:
-        @functools.wraps(wrapper)
-        def enhanced(*args, **kwargs):
-            if len(args) > 0:
-                newfn = wrapper(*args, **kwargs)
-                return newfn
-            else:
-                newwrapper = functools.partial(wrapper, **kwargs)
-                return newwrapper
+    @functools.wraps(wrapper)
+    def enhanced(*args, **kwargs):
+        is_bound_method = hasattr(args[0], wrapper.__name__) if args else False
+        if is_bound_method:
+            count = 1
+        else:
+            count = 0
+        if len(args) > count:
+            newfn = wrapper(*args, **kwargs)
+            return newfn
+        else:
+            newwrapper = functools.partial(wrapper, *args, **kwargs)
+            return newwrapper
     return enhanced

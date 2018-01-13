@@ -192,21 +192,45 @@ Defined wrapper can be used in both ways
     #> 1
 
 
-Bound method wrapping
+Bound method wrapper
 =====================
 
 ``biwrap`` also works for bound methods. As seen in `SO thread <https://stackoverflow.com/questions/3888158/making-decorators-with-optional-arguments>`__ this can be a problem as first positional argument is ``self`` instead of a function.
 
 .. code-block:: python
 
-    class O:
-        @hiwrap(hi=False)
-        def fn(self, n):
-            print(n)
+    class W:
+        def __init__(self, n):
+            self.n = n
 
-    O().fn(1)
-    #> bye
+        @biwrap.biwrap
+        def wrap(self, fn, text='hi'):
+            def wrapped(*args, **kwargs):
+                for _ in range(self.n):
+                    print(text)
+                return fn(*args, **kwargs)
+            return wrapped
+    wr = W(3)
+
+    @wr.wrap
+    def fn(n):
+        print(n)
+
+    fn(1)
+    #> hi
+    #> hi
+    #> hi
     #> 1
+
+    @wr.wrap(text='bye')
+    def fn(n):
+        print(n)
+
+    wr.n = 2
+    fn(2)
+    #> bye
+    #> bye
+    #> 2
 
 Class methods / properties wrapping
 ===================================
@@ -237,7 +261,6 @@ Implementation deals with these cases as well
     print(o.num)
     #> bye
     #> 2
-
 
 Wrapper as a function
 =====================
